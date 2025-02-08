@@ -200,18 +200,15 @@ const storage = multer.diskStorage({
 export const upload = multer({ storage })
 
 export const createPost = async (req, res) => {
-	const { title, text } = req.body
-	const file = req.file
-
-	const directory = `/uploads/${file.filename}`
+	const { title, text, imageUrl } = req.body
 
 	try {
 		await dbPromise.query(
 			"INSERT INTO article (title, text_article, directory_img, creation_date) VALUES (?, ?, ?, ?)",
-			[title, text, directory, now]
+			[title, text, imageUrl, now]
 		)
 
-		return res.status(200).json({ title, text, directory })
+		return res.status(200).json({ title, text, imageUrl })
 	} catch (e) {
 		return res.status(500).json({ message: "Erro interno do servidor." })
 	}
