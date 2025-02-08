@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(
 	cors({
-		origin: "https://bamboo-rho.vercel.app",
+		origin: ["https://bamboo-rho.vercel.app", "http://localhost:5173"],
 	})
 )
 
