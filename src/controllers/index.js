@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import multer from "multer"
 import path from "path"
-import fs from "fs"
 import "dotenv/config"
 
 import { dbPromise } from "../config/connection.js"
@@ -239,15 +238,6 @@ export const deletePost = async (req, res) => {
 	const { id } = req.params
 
 	try {
-		const [rows] = await dbPromise.query("SELECT directory_img FROM article WHERE id = ?", [id])
-
-		const path = rows[0].directory_img
-
-		fs.unlink(`./${path}`, (err) => {
-			if (err) throw err
-			console.log("arquivo removido")
-		})
-
 		await dbPromise.query("DELETE FROM article WHERE id = ?", [id])
 
 		return res.status(200).json({ message: "Postagem excluída com sucesso" })
