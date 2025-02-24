@@ -1,7 +1,5 @@
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import multer from "multer"
-import path from "path"
 import "dotenv/config"
 
 import { dbPromise } from "../config/connection.js"
@@ -101,10 +99,7 @@ export const configAvailability = async (req, res) => {
 			return res.status(400).json({ message: "Data já configurada no sistema." })
 		}
 
-		const [result] = await dbPromise.query("INSERT INTO availability (date, times) VALUES (?, ?)", [
-			date,
-			timesJSON,
-		])
+		const [result] = await dbPromise.query("INSERT INTO availability (date, times) VALUES (?, ?)", [date, timesJSON])
 		res.status(201).json({
 			message: "Disponibilidade salva com sucesso",
 		})
@@ -186,18 +181,6 @@ export const changeAppointments = async (req, res) => {
 	}
 }
 
-const storage = multer.diskStorage({
-	destination: (req, file, cb) => {
-		cb(null, "uploads/")
-	},
-	filename: (req, file, cb) => {
-		const uniqueSuffix = Date.now() + "-" + path.extname(file.originalname)
-		cb(null, file.fieldname + "-" + uniqueSuffix)
-	},
-})
-
-export const upload = multer({ storage })
-
 export const createPost = async (req, res) => {
 	const { title, text, imageUrl } = req.body
 
@@ -209,6 +192,7 @@ export const createPost = async (req, res) => {
 
 		return res.status(200).json({ title, text, imageUrl })
 	} catch (e) {
+		console.log(e)
 		return res.status(500).json({ message: "Erro interno do servidor." })
 	}
 }

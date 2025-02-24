@@ -11,7 +11,6 @@ import {
 	getAppointments,
 	changeAppointments,
 	createPost,
-	upload,
 	getAllPosts,
 	getPost,
 	deletePost,
@@ -65,8 +64,5 @@ router.delete("/appointments/:id", isAuthenticated, deleteAppointmentsProfile)
 // password
 
 router.post("/forgot-password", forgotPassword)
-
-// Servir os arquivos estáticos da pasta de uploads
-router.use("/uploads", express.static("uploads"))
 
 export default router
