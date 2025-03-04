@@ -299,15 +299,17 @@ export const deleteAppointmentsProfile = async (req, res) => {
 
 		const { date, time } = appointment[0]
 
+		const formattedTime = time.split(":").slice(0, 2).join(":")
+
 		const [availability] = await dbPromise.query("SELECT * FROM availability WHERE date = ?", [date])
 
 		if (availability.length === 0) {
-			await dbPromise.query("INSERT INTO availability (date, times) VALUES (?, JSON_ARRAY(?))", [date, time])
+			await dbPromise.query("INSERT INTO availability (date, times) VALUES (?, JSON_ARRAY(?))", [date, formattedTime])
 		} else {
 			const times = availability[0].times
-			if (!times.includes(time)) {
+			if (!times.includes(formattedTime)) {
 				await dbPromise.query("UPDATE availability SET times = JSON_ARRAY_APPEND(times, '$', ?) WHERE date = ?", [
-					time,
+					formattedTime,
 					date,
 				])
 			} else {
