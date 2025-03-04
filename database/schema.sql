@@ -27,7 +27,7 @@ CREATE TABLE article (
     title VARCHAR(100) NOT NULL,     
     text_article TEXT NOT NULL,               
     directory_img VARCHAR(100),     
-    creation_date VARCHAR(25) NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE availability (

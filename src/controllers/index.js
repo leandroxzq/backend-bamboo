@@ -3,10 +3,6 @@ import bcrypt from "bcrypt"
 import "dotenv/config"
 
 import { dbPromise } from "../config/connection.js"
-
-import moment from "moment"
-const now = moment.utc().toISOString()
-
 const secretKey = process.env.SECRET_KEY
 
 const updateAppointments = async () => {
@@ -72,9 +68,7 @@ export const login = async (req, res) => {
 			return res.status(401).json({ error: "Credenciais inválidas." })
 		}
 
-		const token = jwt.sign({ id: user.id, role: user.role }, secretKey, {
-			expiresIn: "12h",
-		})
+		const token = jwt.sign({ id: user.id, role: user.role }, secretKey)
 
 		res.status(200).json({ token, role: user.role })
 	} catch (error) {
@@ -195,10 +189,11 @@ export const createPost = async (req, res) => {
 	const { title, text, imageUrl } = req.body
 
 	try {
-		await dbPromise.query(
-			"INSERT INTO article (title, text_article, directory_img, creation_date) VALUES (?, ?, ?, ?)",
-			[title, text, imageUrl, now]
-		)
+		await dbPromise.query("INSERT INTO article (title, text_article, directory_img) VALUES (?, ?, ?)", [
+			title,
+			text,
+			imageUrl,
+		])
 
 		return res.status(200).json({ title, text, imageUrl })
 	} catch (e) {
